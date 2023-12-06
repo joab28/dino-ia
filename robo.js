@@ -3,36 +3,42 @@ class Robo {
     this.ctx = ctx;
   }
 
+  criaDinos() {
+    const quantidadeDeObjetos = 10;
+
+    const meuArray = [];
+    for (let i = 0; i < quantidadeDeObjetos; i++) {
+      meuArray.push(new Partida(50 + i + 10));
+    }
+    return meuArray;
+  }
+
+  desenhaPartidas(ctx, cenario, p, partida) {
+    for (let i = 0; i < partida.length; i++) {
+      partida[i].desenha(ctx, cenario, p);
+    }
+  }
+
+  verificaBatidas(partida) {
+    return partida.filter((item) => !item.getBateu());
+  }
+
   criaPartida() {
-    function criaDinos() {
-      const quantidadeDeObjetos = 10;
-
-      const meuArray = [];
-      for (let i = 0; i < quantidadeDeObjetos; i++) {
-        meuArray.push(new Partida(50));
-      }
-      return meuArray;
-    }
-
-    function desenhaPartidas(ctx, cenario, p) {
-      const quantidadeDeObjetos = 10;
-      for (let i = 0; i < quantidadeDeObjetos; i++) {
-        partida[i].desenha(ctx, cenario, p);
-      }
-    }
-
-    function verificaBatidas(partida) {
-      return partida.filter((item) => !item.getBateu());
-    }
-    let cenario = new Cenario(this.ctx);
-    let partida = criaDinos();
-    let p = setInterval(draw, 20);
-    function draw() {
+    const draw = () => {
+      console.log(partida);
       cenario.limpar(this.ctx);
       cenario.atualizarCenario(this.ctx);
       cenario.desenhaContador(this.ctx);
-      desenhaPartidas(this.ctx, cenario, p);
-      partida = verificaBatidas(partida);
-    }
+      this.desenhaPartidas(this.ctx, cenario, p, partida);
+      partida = this.verificaBatidas(partida);
+
+      if (partida.length == 0) {
+        clearInterval(p);
+      }
+    };
+    console.log("joabin");
+    let cenario = new Cenario(this.ctx);
+    let partida = this.criaDinos();
+    let p = setInterval(draw, 20);
   }
 }

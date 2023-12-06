@@ -14,7 +14,7 @@ class Humano {
       partida.desenha(this.ctx, cenario, p);
     }
 
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", (e) => {
       if (e.keyCode == 13 && partida.getBateu()) {
         cenario = new Cenario(this.ctx);
         partida = new Partida(50);
@@ -26,7 +26,7 @@ class Humano {
         partida.getDino().agachar();
       }
     });
-    document.addEventListener("keyup", function (e) {
+    document.addEventListener("keyup", (e) => {
       partida.getDino().resetarSalto();
     });
   }
