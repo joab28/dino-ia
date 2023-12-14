@@ -3,16 +3,6 @@ class Robo {
     this.ctx = ctx;
   }
 
-  criaDinos() {
-    const quantidadeDeObjetos = 10;
-
-    const meuArray = [];
-    for (let i = 0; i < quantidadeDeObjetos; i++) {
-      meuArray.push(new Partida(50 + i + 10));
-    }
-    return meuArray;
-  }
-
   desenhaPartidas(ctx, cenario, p, partida) {
     for (let i = 0; i < partida.length; i++) {
       partida[i].desenha(ctx, cenario, p);
@@ -25,20 +15,26 @@ class Robo {
 
   criaPartida() {
     const draw = () => {
-      console.log(partida);
       cenario.limpar(this.ctx);
       cenario.atualizarCenario(this.ctx);
       cenario.desenhaContador(this.ctx);
       this.desenhaPartidas(this.ctx, cenario, p, partida);
       partida = this.verificaBatidas(partida);
+      for (let i = 0; i < partida.length; i++) {
+        ia.decisaoPulo(partida[i].getDino());
+      }
 
       if (partida.length == 0) {
         clearInterval(p);
+        cenario = new Cenario(this.ctx);
+        ia.geracao();
+        partida = ia.getPartidas();
+        p = setInterval(draw, 20);
       }
     };
-    console.log("joabin");
     let cenario = new Cenario(this.ctx);
-    let partida = this.criaDinos();
+    const ia = new IA();
+    let partida = ia.getPartidas();
     let p = setInterval(draw, 20);
   }
 }
