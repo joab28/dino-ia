@@ -8,6 +8,8 @@ class Dino {
     this.imagem = new Image();
     this.selecaoImagem = 0;
     this.metrica = new Metrica();
+    //ia
+    this.metricaPulo = [];
 
     this.salto = {
       pulando: false,
@@ -99,5 +101,21 @@ class Dino {
 
   resetarSalto() {
     this.salto.crouching = false;
+  }
+
+  getMetrica() {
+    return this.metrica;
+  }
+
+  getMetricaPulo() {
+    return this.metricaPulo;
+  }
+
+  setMetricaPulo(metricaPulo) {
+    this.metricaPulo = metricaPulo;
+  }
+
+  getMetricaPulo() {
+    return this.metricaPulo;
   }
 }
