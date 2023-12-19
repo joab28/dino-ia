@@ -1,7 +1,7 @@
 class Metrica {
   constructor() {
     this.distProxObj = null;
-    this.tamProxObj = null;
+    this.alturaProxObj = null;
     this.tempoPercorrido = 0;
   }
 
@@ -13,12 +13,12 @@ class Metrica {
     this.distProxObj = distProxObj;
   }
 
-  getTamProxObj() {
-    return this.tamProxObj;
+  getAlturaProxObj() {
+    return this.alturaProxObj;
   }
 
-  setTamProxObj(tamProxObj) {
-    this.tamProxObj = tamProxObj;
+  setAlturaProxObj(alturaProxObj) {
+    this.alturaProxObj = alturaProxObj;
   }
 
   getTempoPercorrido() {

@@ -2,8 +2,8 @@ class Dino {
   constructor(posicaoX) {
     this.posicaoX = posicaoX;
     //this.posicaoY = 110;
-    this.posicaoY = 110;
-    this.altura = 40;
+    this.posicaoY = 107;
+    this.altura = 43;
     this.largura = 40;
     this.imagem = new Image();
     this.selecaoImagem = 0;
@@ -13,26 +13,44 @@ class Dino {
 
     this.salto = {
       pulando: false,
-      gravidade: SPEED + GRAVIDADE_INICIAL_PULO,
+      gravidade: GRAVIDADE_INICIAL_PULO + SPEED / 1000,
       jumpIntervalId: null,
-      alturaPuloDino: SPEED + ALTURA_PULO / SPEED,
+      alturaPuloDino: ALTURA_PULO,
       crouching: false,
     };
   }
 
-  drawDino(ctx) {
-    ctx.fillStyle = "black";
-    if (this.selecaoImagem < 10) {
-      this.imagem.src = "images/dino1.png";
-      this.selecaoImagem++;
-    } else if (this.selecaoImagem < 20) {
-      this.imagem.src = "images/dino0.png";
-      this.selecaoImagem++;
+  desenhaDino(ctx) {
+    ctx.fillStyle = "blue";
+
+    if (this.posicaoY + this.altura == ALTURA_CENARIO) {
+      if (this.selecaoImagem < 10 && this.salto.crouching) {
+        this.altura = 25;
+        this.imagem.src = "images/dino2.png";
+        this.selecaoImagem++;
+      } else if (this.selecaoImagem < 20 && this.salto.crouching) {
+        this.altura = 25;
+        this.imagem.src = "images/dino3.png";
+        this.selecaoImagem++;
+      } else if (this.selecaoImagem < 10) {
+        this.imagem.src = "images/dino1.png";
+        this.selecaoImagem++;
+        this.altura = this.imagem.naturalHeight;
+      } else if (this.selecaoImagem < 20) {
+        this.imagem.src = "images/dino0.png";
+        this.selecaoImagem++;
+        this.altura = this.imagem.naturalHeight;
+      } else {
+        this.selecaoImagem = 0;
+      }
     } else {
-      this.selecaoImagem = 0;
+      this.imagem.src = "images/dino5.bmp";
+      this.altura = this.imagem.naturalHeight;
     }
-    //teste
-    ctx.fillStyle = "red";
+    if (!this.salto.pulando) {
+      this.posicaoY = ALTURA_CENARIO - this.altura;
+    }
+
     ctx.fillRect(this.posicaoX, this.posicaoY, this.largura, this.altura);
     ctx.drawImage(
       this.imagem,
@@ -55,16 +73,14 @@ class Dino {
       ) {
         let distProxObj =
           objetos[i].posicaoX - (this.posicaoX + this.largura + SPEED);
-        let tamProjObj = objetos[i].largura;
+        let alturaProjObj = objetos[i].altura;
 
         this.metrica.setDistProxObj(distProxObj);
-        this.metrica.setTamProxObj(tamProjObj);
+        this.metrica.setAlturaProxObj(alturaProjObj);
 
         cont = false;
       }
     }
-
-    //console.log(this.metrica.getDistProxObj());
   }
 
   pular() {
@@ -76,30 +92,30 @@ class Dino {
           if (this.salto.crouching) {
             // verifica se o dinossauro está agachado e aplica uma força de gravidade maior se estiver
             this.salto.alturaPuloDino -=
-              VELOCIDADE_ADICIONAL_AGACHAMENTO * (this.salto.gravidade / 14);
+              VELOCIDADE_ADICIONAL_AGACHAMENTO * this.salto.gravidade;
           } else {
-            this.salto.alturaPuloDino -= this.salto.gravidade / 14;
+            this.salto.alturaPuloDino -= this.salto.gravidade;
           } // adiciona a aceleração da gravidade à velocidade vertical do dinossauro
           this.posicaoY -= this.salto.alturaPuloDino; // atualiza a posição vertical do dinossauro
           if (this.posicaoY + this.altura >= ALTURA_CENARIO) {
             // verifica se o dinossauro atingiu o chão
             // define pulando como false para indicar que o dinossauro terminou de saltar
             this.posicaoY = ALTURA_CENARIO - this.altura; // define a posição vertical do dinossauro como a posição do chão
-            this.salto.alturaPuloDino = SPEED + ALTURA_PULO / SPEED; // redefine a velocidade vertical do dinossauro como zero
+            this.salto.alturaPuloDino = ALTURA_PULO; // redefine a velocidade vertical do dinossauro como zero
             clearInterval(this.salto.jumpIntervalId); // para o loop de salto
             this.salto.jumpIntervalId = null;
             this.salto.pulando = false;
           }
         }, 20);
+        //this.salto.crouching = false;
       }
     }
   }
-
   agachar() {
     this.salto.crouching = true;
   }
 
-  resetarSalto() {
+  resetarAgachamento() {
     this.salto.crouching = false;
   }
 
