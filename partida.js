@@ -6,7 +6,7 @@ class Partida {
   }
 
   desenha(ctx, cenario, current) {
-    this.dino.drawDino(ctx);
+    this.dino.desenhaDino(ctx);
     this.dino.atualizaMetricas(cenario.getObjetos());
 
     const colidiu = this.colisao.colisao(cenario.getObjetos(), this.dino);

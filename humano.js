@@ -27,7 +27,7 @@ class Humano {
       }
     });
     document.addEventListener("keyup", (e) => {
-      partida.getDino().resetarSalto();
+      partida.getDino().resetarAgachamento();
     });
   }
 }

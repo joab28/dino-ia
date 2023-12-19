@@ -23,7 +23,7 @@ class Cenario {
   }
 
   desenhaObstaculos(ctx, objetos) {
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "white";
     for (let i = 0; i < objetos.length; i++) {
       //teste
       ctx.fillRect(
@@ -44,8 +44,11 @@ class Cenario {
   }
 
   desenhaContador(ctx) {
-    ctx.font = "20px serif";
+    ctx.font = "16px serif";
     ctx.strokeText(("0000000" + this.distPercorrida).slice(-7), 5, 15);
+
+    ctx.strokeText("Vel:", 90, 15);
+    ctx.strokeText(("000" + parseInt(SPEED)).slice(-3), 120, 15);
   }
 
   atualizarCenario(ctx) {
@@ -60,7 +63,10 @@ class Cenario {
       const objetos = this.montarObjetos();
       this.objetos = objetos;
     }
+    if (SPEED < 25) SPEED = SPEED + 0.01;
+
     this.setDistPercorrida(Date.now());
+
     this.desenhaObstaculos(ctx, this.objetos);
   }
 
