@@ -4,6 +4,7 @@ class Colisao {
       if (
         dino.posicaoX + dino.largura + SPEED > obstaculos[i].posicaoX &&
         dino.posicaoY + dino.altura > obstaculos[i].posicaoY &&
+        !(dino.posicaoY > obstaculos[i].posicaoY + obstaculos[i].altura) &&
         dino.posicaoX - dino.largura + SPEED < obstaculos[i].posicaoX
       ) {
         return true;

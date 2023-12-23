@@ -39,6 +39,10 @@ class Robo {
       document.getElementById("valor4").innerHTML = metricaPulo[3];
       document.getElementById("valor5").innerHTML = metricaPulo[4];
       document.getElementById("valor6").innerHTML = metricaPulo[5];
+      document.getElementById("valor7").innerHTML = metricaPulo[6];
+      document.getElementById("valor8").innerHTML = metricaPulo[7];
+      document.getElementById("valor9").innerHTML = metricaPulo[8];
+      document.getElementById("valor10").innerHTML = metricaPulo[9];
     };
     let cenario = new Cenario(this.ctx);
     const ia = new IA();

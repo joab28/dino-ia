@@ -1,7 +1,7 @@
 class IA {
   constructor() {
-    this.quantidadePartidas = 150;
-    this.quantidadePesos = 6;
+    this.quantidadePartidas = 1000;
+    this.quantidadePesos = 10;
     this.geracaoNum = 0;
     this.partidas = this.criaPartidas();
     for (let i = 0; i < this.quantidadePartidas; i++) {
@@ -12,7 +12,7 @@ class IA {
   criaPartidas() {
     const meuArray = [];
     for (let i = 0; i < this.quantidadePartidas; i++) {
-      const partida = new Partida(50 + i);
+      const partida = new Partida(50);
       meuArray.push(partida);
     }
     return meuArray;
@@ -32,7 +32,7 @@ class IA {
 
   torneio(partidaAntiga) {
     let partidasSorteadas = [];
-    for (let i = 0; i < this.quantidadePartidas / 2; i++) {
+    for (let i = 0; i < this.quantidadePartidas / 10; i++) {
       let indice = Math.floor(Math.random() * this.quantidadePartidas);
       partidasSorteadas.push(partidaAntiga[indice]);
     }
@@ -46,6 +46,29 @@ class IA {
       partidasSorteadas[0].getDino().getMetricaPulo(),
       partidasSorteadas[1].getDino().getMetricaPulo(),
     ];
+  }
+
+  selecaoPorRoleta(populacao) {
+    // Calcula a soma total das aptidões na população
+    var somaAptidoes = populacao.reduce(function (soma, individuo) {
+      return soma + individuo.getDino().getMetrica().getTempoPercorrido();
+    }, 0);
+
+    // Gera um número aleatório entre 0 e a soma total das aptidões
+    var pontoDeSelecao = Math.random() * somaAptidoes;
+
+    // Realiza a seleção com base no ponto de seleção
+    var acumulado = 0;
+    for (var i = 0; i < populacao.length; i++) {
+      acumulado += populacao[i].getDino().getMetrica().getTempoPercorrido();
+      if (acumulado >= pontoDeSelecao) {
+        // Retorna o indivíduo selecionado
+        return populacao[i].getDino().getMetricaPulo();
+      }
+    }
+
+    // Em caso de erro ou se nenhum indivíduo for selecionado
+    return [];
   }
 
   crossOver(paisSelecionados) {
@@ -81,6 +104,10 @@ class IA {
 
     let novaGeracao = [];
     for (let i = 0; i < this.quantidadePartidas / 2; i++) {
+      // let roleta1 = this.selecaoPorRoleta(partidaAntiga);
+      // let roleta2 = this.selecaoPorRoleta(partidaAntiga);
+
+      // let metricasPulosSelecionada = [roleta1, roleta2];
       let metricasPulosSelecionada = this.torneio(partidaAntiga);
       let filhos;
       if (Math.floor(Math.random() * 100) <= 80) {
@@ -92,7 +119,8 @@ class IA {
     }
 
     for (let i = 0; i < this.quantidadePartidas; i++) {
-      if (Math.floor(Math.random() * 100) <= 10) {
+      if (Math.floor(Math.random() * 100) <= 20) {
+        console.log(novaGeracao[i]);
         let individual = this.mutacao(novaGeracao[i]);
         novaGeracao[i] = individual;
         partidaNova[i].getDino().setMetricaPulo(individual);
@@ -120,10 +148,10 @@ class IA {
     let metricas = [
       Number(metricasDino.getDistProxObj().toFixed(2)),
       metricasDino.getAlturaProxObj(),
-      Number(SPEED.toFixed(2)),
+      SPEED,
     ];
     let metricasPulo = dino.getMetricaPulo();
-    for (let i = 0; i < this.quantidadePesos; i++) {
+    for (let i = 0; i < this.quantidadePesos - 4; i++) {
       sinais.push(metricasPulo[i] * metricas[i % metricas.length]);
     }
     let neuronio1 = sinais.slice(0, 3).reduce((acc, cur) => acc + cur);
@@ -136,9 +164,24 @@ class IA {
       neuronio2 = 0;
     }
 
+    metricas = [neuronio1, neuronio2];
+
+    for (let i = 6; i < this.quantidadePesos; i++) {
+      sinais.push(metricasPulo[i] * metricas[i % metricas.length]);
+    }
+
+    neuronio1 = sinais.slice(6, 8).reduce((acc, cur) => acc + cur);
+    neuronio2 = sinais.slice(8, 10).reduce((acc, cur) => acc + cur);
+
+    if (neuronio1 < 0) {
+      neuronio1 = 0;
+    }
+    if (neuronio2 < 0) {
+      neuronio2 = 0;
+    }
+
     if (neuronio1 > neuronio2) {
       dino.pular();
-      dino.resetarAgachamento();
     } else if (neuronio1 < neuronio2) {
       dino.agachar();
     }
