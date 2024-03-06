@@ -1,8 +1,9 @@
 class IA {
   constructor() {
-    this.quantidadePartidas = 1000;
+    this.quantidadePartidas = 800;
     this.quantidadePesos = 10;
     this.geracaoNum = 0;
+    this.individuosSelecionados = [];
     this.partidas = this.criaPartidas();
     for (let i = 0; i < this.quantidadePartidas; i++) {
       this.defineMetricasAleatoriaPulo(this.partidas[i].getDino());
@@ -30,10 +31,27 @@ class IA {
     dino.setMetricaPulo(pesos);
   }
 
+  defineMetricasAleatoriaPuloComplementar() {
+    let pesos = [];
+    const min = -1000;
+    const max = 1000;
+    for (let i = 0; i < this.quantidadePesos; i++) {
+      let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+      pesos.push(randomNumber);
+    }
+
+    return pesos;
+  }
+
   torneio(partidaAntiga) {
     let partidasSorteadas = [];
-    for (let i = 0; i < this.quantidadePartidas / 10; i++) {
+    for (let i = 0; i < this.quantidadePartidas/ 10; i++) {
       let indice = Math.floor(Math.random() * this.quantidadePartidas);
+
+      do {
+        indice = Math.floor(Math.random() * this.quantidadePartidas);
+    } while (this.individuosSelecionados.includes(indice));
+      partidaAntiga[indice].indice = indice;
       partidasSorteadas.push(partidaAntiga[indice]);
     }
     partidasSorteadas.sort((x, y) => {
@@ -42,6 +60,9 @@ class IA {
         x.getDino().getMetrica().getTempoPercorrido()
       );
     });
+    this.individuosSelecionados.push( partidasSorteadas[0].indice, partidasSorteadas[1].indice);
+    partidasSorteadas[0].indice = null;
+    partidasSorteadas[1].indice = null;
     return [
       partidasSorteadas[0].getDino().getMetricaPulo(),
       partidasSorteadas[1].getDino().getMetricaPulo(),
@@ -101,34 +122,32 @@ class IA {
   geracao() {
     const partidaAntiga = this.partidas;
     const partidaNova = this.criaPartidas();
-
     let novaGeracao = [];
     for (let i = 0; i < this.quantidadePartidas / 2; i++) {
-      // let roleta1 = this.selecaoPorRoleta(partidaAntiga);
-      // let roleta2 = this.selecaoPorRoleta(partidaAntiga);
-
-      // let metricasPulosSelecionada = [roleta1, roleta2];
       let metricasPulosSelecionada = this.torneio(partidaAntiga);
       let filhos;
-      if (Math.floor(Math.random() * 100) <= 80) {
+      if (Math.floor(Math.random() * 100) <= 70) {
         filhos = this.crossOver(metricasPulosSelecionada);
+        novaGeracao.push(...filhos, ...metricasPulosSelecionada);
       } else {
-        filhos = metricasPulosSelecionada;
+        novaGeracao.push(...metricasPulosSelecionada);
       }
-      novaGeracao.push(...filhos);
     }
-
-    for (let i = 0; i < this.quantidadePartidas; i++) {
-      if (Math.floor(Math.random() * 100) <= 20) {
-        console.log(novaGeracao[i]);
+    this.individuosSelecionados = [];
+    let tamNovaGeracao = novaGeracao.length;
+    for (let i = 0; i < tamNovaGeracao; i++) {
+      if (Math.floor(Math.random() * 100) <= 10) {
         let individual = this.mutacao(novaGeracao[i]);
-        novaGeracao[i] = individual;
-        partidaNova[i].getDino().setMetricaPulo(individual);
-      } else {
-        partidaNova[i].getDino().setMetricaPulo(novaGeracao[i]);
+        novaGeracao.push(individual);
       }
     }
-    this.partidas = partidaNova;
+    while(novaGeracao.length < this.quantidadePartidas) {
+      novaGeracao.push(this.defineMetricasAleatoriaPuloComplementar());
+    }
+    for (let i = 0; i < this.quantidadePartidas; i++) {
+      partidaNova[i].getDino().setMetricaPulo(novaGeracao[i]);
+      this.partidas = partidaNova;
+    }
     this.geracaoNum = this.geracaoNum + 1;
   }
 
@@ -146,10 +165,11 @@ class IA {
     let metricasDino = dino.getMetrica();
 
     let metricas = [
-      Number(metricasDino.getDistProxObj().toFixed(2)),
+      Number(metricasDino.getDistProxObj().toFixed(0)),
       metricasDino.getAlturaProxObj(),
-      SPEED,
+      Number(SPEED.toFixed(0)),
     ];
+    console.log(metricas)
     let metricasPulo = dino.getMetricaPulo();
     for (let i = 0; i < this.quantidadePesos - 4; i++) {
       sinais.push(metricasPulo[i] * metricas[i % metricas.length]);
