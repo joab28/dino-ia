@@ -26,8 +26,8 @@ class Humano {
         partida.getDino().agachar();
       }
     });
-    document.addEventListener("keyup", (e) => {
-      partida.getDino().resetarAgachamento();
-    });
+    // document.addEventListener("keyup", (e) => {
+    //   partida.getDino().resetarAgachamento();
+    // });
   }
 }

@@ -44,7 +44,7 @@ class Dino {
         this.selecaoImagem = 0;
       }
     } else {
-      this.imagem.src = "images/dino5.bmp";
+      this.imagem.src = "images/dino5.png";
       this.altura = this.imagem.naturalHeight;
     }
     if (!this.salto.pulando) {
@@ -69,45 +69,60 @@ class Dino {
       if (
         this.posicaoX < objetos[i].posicaoX &&
         cont &&
-        this.metrica.getTempoPercorrido() == 0
+        this.metrica.getTempoPercorrido() == 0 &&
+        objetos[i].altura
       ) {
         let distProxObj =
           objetos[i].posicaoX - (this.posicaoX + this.largura + SPEED);
-        let alturaProjObj = objetos[i].altura;
 
+        if (i != tamArray - 1) {
+          distProxObj =
+            distProxObj < 0
+              ? objetos[i + 1].posicaoX - (this.posicaoX + this.largura + SPEED)
+              : distProxObj;
+        }
+        let alturaProjObj =
+          ALTURA_CENARIO - (objetos[i].altura + objetos[i].posicaoY);
         this.metrica.setDistProxObj(distProxObj);
         this.metrica.setAlturaProxObj(alturaProjObj);
-
         cont = false;
       }
     }
   }
 
+  funcaoPular = () => {
+    if (!(this.salto.crouching && !this.salto.pulando)) {
+      if (this.salto.crouching) {
+        // verifica se o dinossauro está agachado e aplica uma força de gravidade maior se estiver
+        this.salto.alturaPuloDino -=
+          VELOCIDADE_ADICIONAL_AGACHAMENTO * this.salto.gravidade;
+      } else {
+        this.salto.alturaPuloDino -= this.salto.gravidade;
+      } // adiciona a aceleração da gravidade à velocidade vertical do dinossauro
+      this.posicaoY -= this.salto.alturaPuloDino; // atualiza a posição vertical do dinossauro
+      this.salto.pulando = true;
+    }
+    if (this.posicaoY + this.altura >= ALTURA_CENARIO) {
+      // verifica se o dinossauro atingiu o chão
+      // define pulando como false para indicar que o dinossauro terminou de saltar
+      this.posicaoY = ALTURA_CENARIO - this.altura; // define a posição vertical do dinossauro como a posição do chão
+      this.salto.alturaPuloDino = ALTURA_PULO; // redefine a velocidade vertical do dinossauro como zero
+      clearInterval(this.salto.jumpIntervalId); // para o loop de salto
+      this.salto.jumpIntervalId = null;
+      if (this.salto.crouching && !this.salto.pulando) {
+        this.salto.crouching = false;
+        this.salto.pulando = false;
+        this.salto.jumpIntervalId = setInterval(this.funcaoPular, 20);
+      }
+      this.salto.pulando = false;
+    }
+  };
   pular() {
     if (!this.salto.pulando) {
       // verifica se o dinossauro está no chão e a barra de espaço foi pressionada
-      this.salto.pulando = true; // define pulando como true para indicar que o dinossauro começou a saltar
+      // define pulando como true para indicar que o dinossauro começou a saltar
       if (this.salto.jumpIntervalId == null) {
-        this.salto.jumpIntervalId = setInterval(() => {
-          if (this.salto.crouching) {
-            // verifica se o dinossauro está agachado e aplica uma força de gravidade maior se estiver
-            this.salto.alturaPuloDino -=
-              VELOCIDADE_ADICIONAL_AGACHAMENTO * this.salto.gravidade;
-          } else {
-            this.salto.alturaPuloDino -= this.salto.gravidade;
-          } // adiciona a aceleração da gravidade à velocidade vertical do dinossauro
-          this.posicaoY -= this.salto.alturaPuloDino; // atualiza a posição vertical do dinossauro
-          if (this.posicaoY + this.altura >= ALTURA_CENARIO) {
-            // verifica se o dinossauro atingiu o chão
-            // define pulando como false para indicar que o dinossauro terminou de saltar
-            this.posicaoY = ALTURA_CENARIO - this.altura; // define a posição vertical do dinossauro como a posição do chão
-            this.salto.alturaPuloDino = ALTURA_PULO; // redefine a velocidade vertical do dinossauro como zero
-            clearInterval(this.salto.jumpIntervalId); // para o loop de salto
-            this.salto.jumpIntervalId = null;
-            this.salto.pulando = false;
-          }
-        }, 20);
-        //this.salto.crouching = false;
+        this.salto.jumpIntervalId = setInterval(this.funcaoPular, 20);
       }
     }
   }
@@ -129,9 +144,5 @@ class Dino {
 
   setMetricaPulo(metricaPulo) {
     this.metricaPulo = metricaPulo;
-  }
-
-  getMetricaPulo() {
-    return this.metricaPulo;
   }
 }

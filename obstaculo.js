@@ -8,7 +8,11 @@ class Obstaculo {
     this.imagem.onload = () => {
       this.altura = this.imagem.naturalHeight;
       this.largura = this.imagem.naturalWidth;
-      this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight;
+      if ([5].includes(tipoObstaculo)) {
+        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight - 45;
+      } else {
+        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight;
+      }
     };
   }
 
@@ -32,17 +36,8 @@ class Obstaculo {
         return "images/obs3.png";
       case 4:
         return "images/obs4.png";
+      case 5:
+        return "images/obs5.bmp";
     }
-  }
-
-  desenhaObjeto(ctx) {
-    ctx.fillStyle = "black";
-    ctx.drawImage(
-      this.imagem,
-      this.posicaoX,
-      this.posicaoY,
-      this.largura,
-      this.altura
-    );
   }
 }

@@ -10,11 +10,11 @@ class Cenario {
   montarObjetos() {
     let objetos = [];
     let soma = 0;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3000; i++) {
       let random = Math.floor(Math.random() * 450) + 450;
       let obstaculo = new Obstaculo(
         canvas.width + soma,
-        Math.floor(Math.floor(Math.random() * 5))
+        Math.floor(Math.floor(Math.random() * 6))
       );
       objetos.push(obstaculo);
       soma = random + soma;
@@ -63,7 +63,7 @@ class Cenario {
       const objetos = this.montarObjetos();
       this.objetos = objetos;
     }
-    if (SPEED < 25) SPEED = SPEED + 0.01;
+    if (SPEED < 25) SPEED = SPEED + 0.005;
 
     this.setDistPercorrida(Date.now());
 
