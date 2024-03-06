@@ -82,9 +82,8 @@ class Dino {
               : distProxObj;
         }
         let alturaProjObj =
-          ALTURA_CENARIO - objetos[i].altura + objetos[i].posicaoY;
+          ALTURA_CENARIO - (objetos[i].altura + objetos[i].posicaoY);
         this.metrica.setDistProxObj(distProxObj);
-        console.log(distProxObj);
         this.metrica.setAlturaProxObj(alturaProjObj);
         cont = false;
       }

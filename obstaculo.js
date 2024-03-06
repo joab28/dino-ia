@@ -8,10 +8,10 @@ class Obstaculo {
     this.imagem.onload = () => {
       this.altura = this.imagem.naturalHeight;
       this.largura = this.imagem.naturalWidth;
-      if ([5, 4, 3].includes(tipoObstaculo)) {
-        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight - 50;
+      if ([5].includes(tipoObstaculo)) {
+        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight - 45;
       } else {
-        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight - 5;
+        this.posicaoY = ALTURA_CENARIO - this.imagem.naturalHeight;
       }
     };
   }

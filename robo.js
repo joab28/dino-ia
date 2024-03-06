@@ -1,7 +1,7 @@
 class Robo {
   constructor(ctx) {
     this.ctx = ctx;
-  }
+      }
 
   desenhaPartidas(ctx, cenario, p, partida) {
     for (let i = 0; i < partida.length; i++) {
@@ -29,7 +29,7 @@ class Robo {
         cenario = new Cenario(this.ctx);
         ia.geracao();
         partida = ia.getPartidas();
-        SPEED = 7;
+        SPEED = 15;
         p = setInterval(draw, 20);
       }
       let metricaPulo = partida[0].getDino().getMetricaPulo();
