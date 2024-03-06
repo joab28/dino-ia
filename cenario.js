@@ -48,13 +48,13 @@ class Cenario {
     ctx.strokeText(("0000000" + this.distPercorrida).slice(-7), 5, 15);
 
     ctx.strokeText("Vel:", 90, 15);
-    ctx.strokeText(("000" + parseInt(SPEED)).slice(-3), 120, 15);
+    ctx.strokeText(("000" + parseInt(VELOCIDADE_JOGO)).slice(-3), 120, 15);
   }
 
   atualizarCenario(ctx) {
     let tamArray = this.objetos.length;
     for (let i = 0; i < tamArray; i++) {
-      this.objetos[i].posicaoX -= SPEED;
+      this.objetos[i].posicaoX -= VELOCIDADE_JOGO;
     }
     //verificar se acabou os obstaculos, ele insere mais
     const ultimo = this.objetos[tamArray - 1];
@@ -63,7 +63,7 @@ class Cenario {
       const objetos = this.montarObjetos();
       this.objetos = objetos;
     }
-    if (SPEED < 25) SPEED = SPEED + 0.005;
+    if (VELOCIDADE_JOGO < 25) VELOCIDADE_JOGO = VELOCIDADE_JOGO + 0.005;
 
     this.setDistPercorrida(Date.now());
 

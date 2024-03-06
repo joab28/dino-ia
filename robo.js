@@ -29,7 +29,7 @@ class Robo {
         cenario = new Cenario(this.ctx);
         ia.geracao();
         partida = ia.getPartidas();
-        SPEED = 15;
+        VELOCIDADE_JOGO = 15;
         p = setInterval(draw, 20);
       }
       let metricaPulo = partida[0].getDino().getMetricaPulo();

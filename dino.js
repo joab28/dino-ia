@@ -13,7 +13,7 @@ class Dino {
 
     this.salto = {
       pulando: false,
-      gravidade: GRAVIDADE_INICIAL_PULO + SPEED / 1000,
+      gravidade: GRAVIDADE_INICIAL_PULO + VELOCIDADE_JOGO / 1000,
       jumpIntervalId: null,
       alturaPuloDino: ALTURA_PULO,
       crouching: false,
@@ -73,12 +73,12 @@ class Dino {
         objetos[i].altura
       ) {
         let distProxObj =
-          objetos[i].posicaoX - (this.posicaoX + this.largura + SPEED);
+          objetos[i].posicaoX - (this.posicaoX + this.largura + VELOCIDADE_JOGO);
 
         if (i != tamArray - 1) {
           distProxObj =
             distProxObj < 0
-              ? objetos[i + 1].posicaoX - (this.posicaoX + this.largura + SPEED)
+              ? objetos[i + 1].posicaoX - (this.posicaoX + this.largura + VELOCIDADE_JOGO)
               : distProxObj;
         }
         let alturaProjObj =
