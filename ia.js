@@ -69,29 +69,6 @@ class IA {
     ];
   }
 
-  selecaoPorRoleta(populacao) {
-    // Calcula a soma total das aptidões na população
-    var somaAptidoes = populacao.reduce(function (soma, individuo) {
-      return soma + individuo.getDino().getMetrica().getTempoPercorrido();
-    }, 0);
-
-    // Gera um número aleatório entre 0 e a soma total das aptidões
-    var pontoDeSelecao = Math.random() * somaAptidoes;
-
-    // Realiza a seleção com base no ponto de seleção
-    var acumulado = 0;
-    for (var i = 0; i < populacao.length; i++) {
-      acumulado += populacao[i].getDino().getMetrica().getTempoPercorrido();
-      if (acumulado >= pontoDeSelecao) {
-        // Retorna o indivíduo selecionado
-        return populacao[i].getDino().getMetricaPulo();
-      }
-    }
-
-    // Em caso de erro ou se nenhum indivíduo for selecionado
-    return [];
-  }
-
   crossOver(paisSelecionados) {
     let filhos = [];
     let corte = Math.floor(Math.random() * this.quantidadePesos);
@@ -167,7 +144,7 @@ class IA {
     let metricas = [
       Number(metricasDino.getDistProxObj().toFixed(0)),
       metricasDino.getAlturaProxObj(),
-      Number(SPEED.toFixed(0)),
+      Number(VELOCIDADE_JOGO.toFixed(0)),
     ];
     let metricasPulo = dino.getMetricaPulo();
     for (let i = 0; i < this.quantidadePesos - 4; i++) {
