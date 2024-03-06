@@ -169,7 +169,6 @@ class IA {
       metricasDino.getAlturaProxObj(),
       Number(SPEED.toFixed(0)),
     ];
-    console.log(metricas)
     let metricasPulo = dino.getMetricaPulo();
     for (let i = 0; i < this.quantidadePesos - 4; i++) {
       sinais.push(metricasPulo[i] * metricas[i % metricas.length]);
